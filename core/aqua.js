@@ -1,11 +1,24 @@
 #!/usr/bin/env node
 const args = require('yargs').argv
 const path = require('path');
+const {compile} = require('./compiler.js');
 args.index = args.index || path.join(process.cwd(), 'index.js');
 args.cache = args.cache || path.join(process.cwd(), '.cache');
 
+console.log('a')
 let index = platformPrecompile();
+console.log('a')
 index = compileParameters(index);
+console.log('a')
+index = compileLinks(index);
+console.log('a')
+
+compile({
+	index: index,
+	cache: args.cache
+})
+console.log('a')
+
 
 /// Do all platform related things to the index file, like substituting
 /// CLI arguments, and converting from a filepath to an actual index object.
@@ -29,6 +42,20 @@ function platformPrecompile() {
 
 
 function compileParameters (index) {
+	let entities = index.Entities;
+
+	for(const key in index.Parameters) {
+		entities = recursiveReplace(entities, `\$${key}`, index.Parameters[key]);
+	}
+
+	return {
+		Entities: entities
+	};
+}
+
+function compileLinks (index) {
+	// TODO implement links
+
 	let entities = index.Entities;
 
 	for(const key in index.Parameters) {

@@ -1,0 +1,7 @@
+{
+  "Name": "module",
+  "From": "./../modules/",
+  "Data": {
+    "Thing": 5
+  }
+}
