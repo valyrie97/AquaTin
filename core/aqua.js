@@ -1,29 +1,63 @@
 #!/usr/bin/env node
-const args = require('yargs').argv
+const {Signale} = require('signale');
+const log = new Signale();
+const interactive = new Signale({interactive: true});
 const path = require('path');
-const {compile} = require('./compiler.js');
-args.index = args.index || path.join(process.cwd(), 'index.js');
-args.cache = args.cache || path.join(process.cwd(), '.cache');
+require('yargs')
+	.scriptName("aqua")
+	.usage('$0 <cmd> [args]')
 
-console.log('a')
-let index = platformPrecompile();
-console.log('a')
-index = compileParameters(index);
-console.log('a')
-index = compileLinks(index);
-console.log('a')
+	.command('compile [paramaters]', 'compiles a system into a cache', (yargs) => {
+		yargs.option('cache', {
+			type: 'string',
+			default: '.cache',
+			describe: 'path of the cache'
+		})
+		yargs.option('index', {
+			type: 'string',
+			default: 'index.js',
+			describe: 'path to the system index'
+		})
+	}, cliCompile)
 
-compile({
-	index: index,
-	cache: args.cache
-})
-console.log('a')
+	.help()
+	.argv;
+
+return;
+
+
+
+/// this is the base compile function, that the CLI directly calls.
+async function cliCompile(args) {
+	console.log('things')
+	const {compile} = require('./compiler.js');
+	if(!path.isAbsolute(args.index)) args.index = path.join(process.cwd(), 'index.js');
+	if(!path.isAbsolute(args.cache)) args.cache = path.join(process.cwd(), 'index.js');
+
+
+	let index = platformPrecompile(args);
+	log.info('precompile completed');
+	
+
+	index = compileParameters(index);
+	log.info('parameters injected');
+	
+	
+	index = compileLinks(index);
+	log.info('entity links created')
+
+
+	compile({
+		index: index,
+		cache: args.cache
+	})
+}
 
 
 /// Do all platform related things to the index file, like substituting
 /// CLI arguments, and converting from a filepath to an actual index object.
 // TODO make this also do dependencies
-function platformPrecompile() {
+function platformPrecompile(args) {
 	// if its a path, require the file and create the object.
 	if(typeof args.index === 'string') {
 		args.index = require(args.index);

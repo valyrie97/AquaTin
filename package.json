@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/marcus13345/AquaTin#readme",
   "dependencies": {
+    "signale": "^1.4.0",
     "uuid": "^3.3.2",
     "yargs": "^13.2.4"
   }

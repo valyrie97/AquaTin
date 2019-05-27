@@ -13,7 +13,6 @@ async function compile({cache: cachePath, index}) {
 	// const modules = {};
 
 	for(const symbol in index.Entities) {
-		console.log(symbol)
 		const module = index.Entities[symbol];
 		let code = await retrieveModule(module.From, module.Name);
 		// modules[module.Name] = code;

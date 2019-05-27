@@ -25,12 +25,10 @@ module.exports.Cache = class Cache {
 	}
 
 	addEntity(name, code) {
-		console.log(`writing ${name}...`);
 		fs.writeFileSync(path.join(this.paths.code, `${name}.js`), code);
 	}
 
 	addInstance(instance) {
-		console.log(`writing ${instance}...`);
 		fs.writeFileSync(path.join(this.paths.instances, `${instance._id}.json`), JSON.stringify(instance, null, 2));
 	}
 }
