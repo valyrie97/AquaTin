@@ -17,9 +17,16 @@ module.exports.Entity = class Entity {
 			}
 		});
 		Object.defineProperty(this.instance, 'send', {
-			value: systemPtr.send.bind(systemPtr)
+			value: ((name, destination, options) => {
+				//anti call stack measure
+				setTimeout(_ => {
+					this.systemPtr.send(name, destination, options);
+				}, 0)
+			}).bind(that)
 		});
 	}
+
+	
 
 	start() {
 		this.systemPtr.send('start', this.instanceData._id);
