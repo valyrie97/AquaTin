@@ -3,17 +3,22 @@ const {Signale} = require('signale');
 const log = new Signale({
 	scope: 'CLI'
 });
+let local = path.join(__dirname, './../modules/')
 
 module.exports = {
-	Parameters: {
-		Source: path.join(__dirname, './../modules/')
-	},
 	Entities: {
-		Tester: {
+		A: {
 			Name: 'module',
-			From: '$Source',
+			From: local,
 			Data: {
-				Thing: 5
+				Thing: '#B'
+			}
+		},
+		B: {
+			Name: 'module',
+			From: local,
+			Data: {
+				Thing: '#A'
 			}
 		}
 	}

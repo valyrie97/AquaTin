@@ -40,10 +40,8 @@ async function cliCompile(args) {
 	if(!path.isAbsolute(args.index)) args.index = path.join(process.cwd(), args.index);
 	if(!path.isAbsolute(args.cache)) args.cache = path.join(process.cwd(), args.cache);
 
-
 	let index = platformPrecompile(args);
 	log.info('precompile completed');
-	
 	
 	compile({
 		index: index,
@@ -62,6 +60,8 @@ function platformPrecompile(args) {
 	}
 
 	const index = args.index;
+
+	if(!('Parameters' in index)) return index;
 
 	for(const key in args) {
 		if(key in index.Parameters) {

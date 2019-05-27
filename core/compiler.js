@@ -1,6 +1,7 @@
 const {Cache} = require('./cache.js');
 const {retrieveModule} = require('./retrieveModule.js');
 const {Signale} = require('signale');
+const uuid = require('uuid');
 const log = new Signale({
 	scope: 'COMPILER'
 });
@@ -57,17 +58,26 @@ function compileParameters (index) {
 }
 
 function compileLinks (index) {
-	// TODO implement links
+	index = {...index};
 
-	let entities = index.Entities;
-
-	for(const key in index.Parameters) {
-		entities = recursiveReplace(entities, `\$${key}`, index.Parameters[key]);
+	//assign all _ids
+	for(const symbol in index.Entities) {
+		const ent = index.Entities[symbol];
+		ent._id = uuid.v4();
 	}
 
-	return {
-		Entities: entities
-	};
+	// loopback and replace all #links in Data with _ids
+	for(const symbol in index.Entities) {
+		let data = index.Entities[symbol].Data;
+		
+		for(const targetSymbol in index.Entities) {
+			data = recursiveReplace(data, `#${targetSymbol}`, index.Entities[targetSymbol]._id)
+		}
+
+		index.Entities[symbol].Data = data;
+	}
+
+	return index;
 }
 
 
