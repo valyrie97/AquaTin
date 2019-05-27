@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 const {Signale} = require('signale');
-const log = new Signale();
+const log = new Signale({
+	scope: 'CLI'
+});
 const interactive = new Signale({interactive: true});
 const path = require('path');
 require('yargs')
@@ -32,21 +34,13 @@ async function cliCompile(args) {
 	console.log('things')
 	const {compile} = require('./compiler.js');
 	if(!path.isAbsolute(args.index)) args.index = path.join(process.cwd(), 'index.js');
-	if(!path.isAbsolute(args.cache)) args.cache = path.join(process.cwd(), 'index.js');
+	if(!path.isAbsolute(args.cache)) args.cache = path.join(process.cwd(), '.cache');
 
 
 	let index = platformPrecompile(args);
 	log.info('precompile completed');
 	
-
-	index = compileParameters(index);
-	log.info('parameters injected');
 	
-	
-	index = compileLinks(index);
-	log.info('entity links created')
-
-
 	compile({
 		index: index,
 		cache: args.cache
@@ -72,59 +66,4 @@ function platformPrecompile(args) {
 	}
 
 	return index;
-}
-
-
-function compileParameters (index) {
-	let entities = index.Entities;
-
-	for(const key in index.Parameters) {
-		entities = recursiveReplace(entities, `\$${key}`, index.Parameters[key]);
-	}
-
-	return {
-		Entities: entities
-	};
-}
-
-function compileLinks (index) {
-	// TODO implement links
-
-	let entities = index.Entities;
-
-	for(const key in index.Parameters) {
-		entities = recursiveReplace(entities, `\$${key}`, index.Parameters[key]);
-	}
-
-	return {
-		Entities: entities
-	};
-}
-
-
-function recursiveReplace(obj, find, replace) {
-	switch(typeof obj) {
-		case 'string': {
-			if(obj === find) return replace;
-			else return obj;
-		}
-		case 'object': {
-			if(Array.isArray(obj)) {
-				const newArr = [];
-				for(const value of obj) {
-					newArr.push(recursiveReplace(value, find, replace));
-				}
-				return newArr;
-			} else {
-				const newObj = {};
-				for (const key in obj) {
-					newObj[key] = recursiveReplace(obj[key], find, replace);
-				}
-				return newObj;
-			}
-		}
-		default: {
-			return obj;
-		}
-	}
 }

@@ -1,5 +1,9 @@
 const fs = require('fs');
 const path = require('path');
+const {Signale} = require('signale');
+const log = new Signale({
+	scope: 'CACHE'
+});
 
 module.exports.Cache = class Cache {
 	constructor (basePath) {
@@ -19,6 +23,8 @@ module.exports.Cache = class Cache {
 	}
 
 	loadCache() {
+		log.info(this.paths)
+		// if(fs.existsSync(this.paths.code))
 		for(let file of fs.readdirSync(this.paths.code)) {
 			// TODO like... do this
 		}
