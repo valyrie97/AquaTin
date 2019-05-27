@@ -32,6 +32,7 @@ async function createCache({cache: cachePath, index}) {
 
 	for(const symbol in index.Entities) {
 		const module = index.Entities[symbol];
+
 		let code = await retrieveModule(module.From, module.Name);
 		// modules[module.Name] = code;
 		cache.addEntity(module.Name, code);

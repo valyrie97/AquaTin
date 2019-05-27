@@ -5,6 +5,8 @@ const log = new Signale({
 });
 const interactive = new Signale({interactive: true});
 const path = require('path');
+const fs = require('fs');
+
 require('yargs')
 	.scriptName("aqua")
 	.usage('$0 <cmd> [args]')
@@ -31,10 +33,12 @@ return;
 
 /// this is the base compile function, that the CLI directly calls.
 async function cliCompile(args) {
-	console.log('things')
 	const {compile} = require('./compiler.js');
-	if(!path.isAbsolute(args.index)) args.index = path.join(process.cwd(), 'index.js');
-	if(!path.isAbsolute(args.cache)) args.cache = path.join(process.cwd(), '.cache');
+	log.debug(path.isAbsolute(args.index));
+	log.debug(args.index);
+	log.debug(process.cwd());
+	if(!path.isAbsolute(args.index)) args.index = path.join(process.cwd(), args.index);
+	if(!path.isAbsolute(args.cache)) args.cache = path.join(process.cwd(), args.cache);
 
 
 	let index = platformPrecompile(args);
