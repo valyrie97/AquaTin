@@ -1,7 +1,7 @@
 
 
 module.exports.entity = class module {
-	async OnStart() {
+	async Start() {
 		console.log('starting...');
 		await new Promise(res => {
 			setTimeout(_ => {

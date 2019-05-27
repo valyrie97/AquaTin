@@ -9,7 +9,7 @@ const log = new Signale({
 module.exports.compile = compile;
 
 
-function compile({cache: cachePath, index}) {
+async function compile({cache: cachePath, index}) {
 	index = compileParameters(index);
 	log.info('parameters injected');
 	
@@ -18,10 +18,12 @@ function compile({cache: cachePath, index}) {
 	log.info('entity links created')
 
 
-	createCache({
+	await createCache({
 		index: index,
 		cache: cachePath
-	})
+	});
+
+	log.info('cache created')
 }
 
 /// cache is the (likely path) string to describe where the cache is store

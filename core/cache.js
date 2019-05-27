@@ -23,7 +23,7 @@ module.exports.Cache = class Cache {
 	}
 
 	loadCache() {
-		log.info(this.paths)
+		// log.debug(this.paths)
 		// if(fs.existsSync(this.paths.code))
 		for(let file of fs.readdirSync(this.paths.code)) {
 			// TODO like... do this
@@ -36,5 +36,21 @@ module.exports.Cache = class Cache {
 
 	addInstance(instance) {
 		fs.writeFileSync(path.join(this.paths.instances, `${instance._id}.json`), JSON.stringify(instance, null, 2));
+	}
+
+	getInstances() {
+		return fs.readdirSync(this.paths.instances).map((val) => {
+			return val.split('.')[0];
+		});
+	}
+
+	getEntityCodePathFromUuid(uuid) {
+		let instancePath = path.join(this.paths.instances, `${uuid}.json`);
+		let codePath = path.join(this.paths.code, `${require(instancePath).Name}.js`);
+		return codePath;
+	}
+	getDataFromUuid(uuid) {
+		let instancePath = path.join(this.paths.instances, `${uuid}.json`);
+		return require(instancePath).Data;
 	}
 }

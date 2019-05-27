@@ -3,7 +3,6 @@ const {Signale} = require('signale');
 const log = new Signale({
 	scope: 'CLI'
 });
-const interactive = new Signale({interactive: true});
 const path = require('path');
 const fs = require('fs');
 
@@ -24,19 +23,35 @@ require('yargs')
 		})
 	}, cliCompile)
 
+	.command('run [paramaters]', 'executes a cache', (yargs) => {
+		yargs.option('cache', {
+			type: 'string',
+			default: '.cache',
+			describe: 'path of the cache'
+		})
+	}, cliRun)
+
 	.help()
 	.argv;
 
 return;
 
 
+async function cliRun(args) {
+	const {Cache} = require('./cache.js');
+	const {System} = require('./system.js')
+	if(!path.isAbsolute(args.cache)) args.cache = path.join(process.cwd(), args.cache);
+	const cache = new Cache(args.cache);
+	new System(cache);
+}
+
 
 /// this is the base compile function, that the CLI directly calls.
 async function cliCompile(args) {
 	const {compile} = require('./compiler.js');
-	log.debug(path.isAbsolute(args.index));
-	log.debug(args.index);
-	log.debug(process.cwd());
+	// log.debug(path.isAbsolute(args.index));
+	// log.debug(args.index);
+	// log.debug(process.cwd());
 	if(!path.isAbsolute(args.index)) args.index = path.join(process.cwd(), args.index);
 	if(!path.isAbsolute(args.cache)) args.cache = path.join(process.cwd(), args.cache);
 
