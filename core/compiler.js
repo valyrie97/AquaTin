@@ -32,6 +32,7 @@ async function compile({cache: cachePath, index}) {
 async function createCache({cache: cachePath, index}) {
 	const cache = new Cache(cachePath);
 	// const modules = {};
+	cache.cleanup();
 
 	for(const symbol in index.Entities) {
 		const module = index.Entities[symbol];
@@ -70,13 +71,13 @@ function compileLinks (index) {
 
 	// loopback and replace all #links in Data with _ids
 	for(const symbol in index.Entities) {
-		let data = index.Entities[symbol].Data;
+		let data = index.Entities[symbol].data;
 		
 		for(const targetSymbol in index.Entities) {
 			data = recursiveReplace(data, `#${targetSymbol}`, index.Entities[targetSymbol]._id)
 		}
 
-		index.Entities[symbol].Data = data;
+		index.Entities[symbol].data = data;
 	}
 
 	return index;

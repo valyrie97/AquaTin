@@ -4,6 +4,7 @@ const {Signale} = require('signale');
 const log = new Signale({
 	scope: 'CACHE'
 });
+const rmrf = require('rimraf');
 
 module.exports.Cache = class Cache {
 	constructor (basePath) {
@@ -12,14 +13,22 @@ module.exports.Cache = class Cache {
 			code: path.join(basePath, 'code'),
 			instances: path.join(basePath, 'instances')
 		}
-		
+		this.createStructure();
+
+		this.loadCache();
+	}
+
+	createStructure() {
 		try {
 			fs.mkdirSync(this.paths.base);
 			fs.mkdirSync(this.paths.code);
 			fs.mkdirSync(this.paths.instances);
 		} catch (e) {};
+	}
 
-		this.loadCache();
+	cleanup() {
+		rmrf.sync(this.paths.base);
+		this.createStructure();
 	}
 
 	loadCache() {
@@ -51,6 +60,11 @@ module.exports.Cache = class Cache {
 	}
 	getDataFromUuid(uuid) {
 		let instancePath = path.join(this.paths.instances, `${uuid}.json`);
-		return require(instancePath).Data;
+		return require(instancePath).data;
+	}
+
+	getInstanceFromUuid(uuid) {
+		let instancePath = path.join(this.paths.instances, `${uuid}.json`);
+		return require(instancePath);
 	}
 }

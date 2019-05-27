@@ -8,42 +8,40 @@ const uuid = require('uuid');
 
 const timeout = 3000;
 const root = (typeof window === 'undefined' ? global : window)
+const {Entity} = require('./entity.js')
 
 module.exports.System = class System {
 	constructor(cache) {
 		this.cache = cache;
 		this.entities = {};
 		for(const uuid of cache.getInstances()) {
-			this.send('Start', uuid)
+			this.loadEntity(uuid)
 		}
 	}
 
 	async send(name, destination, options) {
 		// log.debug(`sending ${name}`);
 
-		if(!(destination in this.entities))
+		if(!(destination in this.entities)) {
 			this.loadEntity(destination);
+			log.debug('loading entity...')
+		}
 
-		let a = require('./../tests/modules/module.js').entity
-		let b = new a({});
-
-		if(name in this.entities[destination])
-			this.entities[destination][name](options);
-		
-		else if('*' in this.entities[destination])
-			this.entities[destination]['*'](options);
-
-		else log.warn(`method ${name} does not exist for ${destination}`);
+		this.entities[destination].dispatch(name, options);
 	}
 
 	loadEntity(uuid) {
 		// log.debug(`spinning up ${uuid}`);
+		log.debug(uuid)
 		if(typeof require === 'function') {
 			let codePath = this.cache.getEntityCodePathFromUuid(uuid);
 			// log.debug(codePath)
 			let data = this.cache.getDataFromUuid(uuid);
-			let entityProto = require(codePath).entity;
-			this.entities[uuid] = new entityProto(data);
+			let instanceData = this.cache.getInstanceFromUuid(uuid);
+			let userCode = require(codePath).entity;
+			this.entities[uuid] = new Entity(userCode, instanceData, this);
+			this.entities[uuid].start();
+			log.debug('starting', uuid)
 		} else {
 			//TODO COMPLICATED EVAL SHIT, MIRRORING REQUIRE FUNCTIONALITY
 		}

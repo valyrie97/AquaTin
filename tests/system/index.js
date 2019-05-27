@@ -1,8 +1,4 @@
 const path = require('path');
-const {Signale} = require('signale');
-const log = new Signale({
-	scope: 'CLI'
-});
 let local = path.join(__dirname, './../modules/')
 
 module.exports = {
@@ -10,15 +6,16 @@ module.exports = {
 		A: {
 			Name: 'module',
 			From: local,
-			Data: {
-				Thing: '#B'
+			data: {
+				thing: '#B',
+				boop: true
 			}
 		},
 		B: {
 			Name: 'module',
 			From: local,
-			Data: {
-				Thing: '#A'
+			data: {
+				thing: '#A'
 			}
 		}
 	}
