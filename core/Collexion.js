@@ -1,34 +1,63 @@
 const {Signale} = require('signale');
 const log = new Signale({
-	scope: 'EXEC'
+	scope: 'COLLEXION'
 });
 const path = require('path');
 const fs = require('fs');
 const uuid = require('uuid');
-
-const timeout = 3000;
 const root = (typeof window === 'undefined' ? global : window)
 const {Entity} = require('./entity.js')
 
-
-class System {
-	constructor(cache) {
-		this.cache = cache;
-		this.entities = {};
-		for(const uuid of cache.getInstances()) {
-			this.loadEntity(uuid)
-		}
+class Link {
+	constructor(symbol) {
+		this.symbol = symbol;
 	}
 
-	async send(name, destination, options) {
-		// log.debug(`sending ${name}`);
+	toString() {
+		return "" + this.symbol;
+	}
+}
 
-		if(!(destination in this.entities)) {
-			this.loadEntity(destination);
-			log.debug('loading entity...')
+class Collexion {
+	constructor() {
+		// this.cache = cache;
+		this.entities = {};
+		// for(const uuid of cache.getInstances()) {
+		// 	this.loadEntity(uuid)
+		// }
+	}
+
+	createInstances(template) {
+		const instances = {};
+		
+		for(const symbol in template) {
+			const instTemplate = template[symbol];
+			const _class = instTemplate.Code;
+			const inst = new _class(this);
+			inst._data = instTemplate.Data;
+			instances[symbol] = inst;
 		}
 
-		this.entities[destination].dispatch(name, options);
+		for(const symbol in instances) {
+			const inst = instances[symbol];
+			inst.start()
+		}
+
+		for(const symbol in instances) {
+			const inst = instances[symbol];
+			const instTemplate = template[symbol];
+			inst._links = instTemplate.Links;
+
+			for (const linkKey in inst._links) {
+				const link = inst._links[linkKey];
+				inst._links[linkKey] = instances[link];
+			}
+		}
+
+		for(const symbol in instances) {
+			const inst = instances[symbol];
+			inst.connected()
+		}
 	}
 
 	loadEntity(uuid) {
@@ -51,4 +80,4 @@ class System {
 
 }
 
-module.exports = {System};
+module.exports = {Collexion, Link};
