@@ -1,10 +1,11 @@
 {
-  "name": "aquatin",
-  "version": "1.0.0",
+  "name": "collexion",
+  "version": "0.0.1",
   "description": "",
-  "main": "index.js",
+  "main": "./core/Collexion.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "compile": "tsc --watch"
   },
   "repository": {
     "type": "git",
@@ -16,12 +17,14 @@
     "url": "https://github.com/marcus13345/AquaTin/issues"
   },
   "bin": {
-    "aqua": "core/aqua.js"
+    "clx": "core/aqua.js"
   },
   "homepage": "https://github.com/marcus13345/AquaTin#readme",
   "dependencies": {
+    "aquatin": "file:.",
     "rimraf": "^2.6.3",
     "signale": "^1.4.0",
+    "typescript": "^3.5.3",
     "uuid": "^3.3.2",
     "yargs": "^13.2.4"
   }

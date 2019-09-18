@@ -1,22 +1,24 @@
 const path = require('path');
-let local = path.join(__dirname, './../modules/')
+
+const ref = require('./node_modules/aqua').Reference;
+
+const ExampleModule = require('./module.js');
 
 module.exports = {
 	Entities: {
 		A: {
-			Name: 'module',
-			From: local,
-			data: {
-				thing: '#B',
+			Code: ExampleModule,
+			Data: {
+				thing: ref('B'),
 				boop: true
 			}
 		},
 		B: {
-			Name: 'module',
-			From: local,
-			data: {
-				thing: '#A'
+			Code: ExampleModule,
+			Data: {
+				thing: ref('B')
 			}
 		}
 	}
 }
+
