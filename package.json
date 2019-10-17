@@ -21,7 +21,6 @@
   },
   "homepage": "https://github.com/marcus13345/AquaTin#readme",
   "dependencies": {
-    "aquatin": "file:.",
     "rimraf": "^2.6.3",
     "signale": "^1.4.0",
     "typescript": "^3.5.3",

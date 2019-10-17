@@ -2,27 +2,21 @@ const {Collexion, Link, LinkArray} = require('./../../core/Collexion.js');
 const PingPong = require('./pingpong.js')
 
 ;(async () => {
-	const collexion = new Collexion({});
-	collexion.createInstances({
-		'A': {
+	const collexion = new Collexion({
+		A: {
 			Code: PingPong,
 			Data: {
-				boop: true
-			},
-			Links: {
-				thing: new Link('B')
+				start: true,
+				boop: 'B'
 			}
 		},
-		'B': {
+		B: {
 			Code: PingPong,
 			Data: {
-
-			},
-			Links: {
-				thing: new Link('B')
+				boop: 'A'
 			}
 		}
-	})
+	});
 })();
 
 

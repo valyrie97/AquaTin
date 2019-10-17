@@ -5,7 +5,7 @@ const log = new Signale({
 
 module.exports = class module {
 	async start() {
-		console.log(this._data)
+		// console.log(this._data)
 	}
 
 	connected() {
@@ -16,7 +16,7 @@ module.exports = class module {
 	async boop() {
 		log.info(`Boop!`)
 		await new Promise(res => setTimeout(res, 1000));
-		this._links.thing.boop();
+		this[this.boop].boop();
 	}
 }
 
